@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Komunalka.API", "Komunalka.API\Komunalka.API.csproj", "{1577C794-BB4B-46C8-B893-4B36EB40970B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Komunalka.DAL", "Komunalka.DAL\Komunalka.DAL.csproj", "{DD903372-3EDA-4840-A2DE-888D017AD27C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1577C794-BB4B-46C8-B893-4B36EB40970B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1577C794-BB4B-46C8-B893-4B36EB40970B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1577C794-BB4B-46C8-B893-4B36EB40970B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1577C794-BB4B-46C8-B893-4B36EB40970B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD903372-3EDA-4840-A2DE-888D017AD27C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD903372-3EDA-4840-A2DE-888D017AD27C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD903372-3EDA-4840-A2DE-888D017AD27C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD903372-3EDA-4840-A2DE-888D017AD27C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {419B5B4B-37C7-4393-AC89-CC48E7EE296F}
+	EndGlobalSection
+EndGlobal
