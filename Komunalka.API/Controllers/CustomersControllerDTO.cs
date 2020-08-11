@@ -31,7 +31,11 @@ namespace Komunalka.API.Controllers
             [HttpGet]
             public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomersDTO()
             {
-                var customers =  await _context.Customer.ToListAsync();
+                var customers =  await _context.Customer
+                                               .Include(c => c.Payment)
+                                               .ThenInclude(p => p.PayingByCounter.ToList())
+                                               .ThenInclude(p => p.ServiceProvider)
+                                               .ToListAsync();
                 var cuatomersDTO = _mapper.Map<List<CustomerDTO>>(customers);
                 return cuatomersDTO;
             }
@@ -40,7 +44,10 @@ namespace Komunalka.API.Controllers
             [HttpGet("{id}")]
             public async Task<ActionResult<CustomerDTO>> GetCustomerDTO(int id)
             {
-                var customer = await _context.Customer.FindAsync(id);
+            var customer = await _context.Customer.Include(c => c.Payment)
+                                                  .ThenInclude(p => p.PayingByCounter)
+                                                  .ThenInclude(p => p.ServiceProvider)
+                                                  .Where(c => c.Id == id).FirstOrDefaultAsync();
 
                 if (customer == null)
                 {
