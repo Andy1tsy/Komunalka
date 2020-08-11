@@ -15,15 +15,32 @@ namespace Komunalka.API.Mapping
             CreateMap<Customer, CustomerDTO>();
             CreateMap<CustomerDTO, Customer>();
 
+            CreateMap<List<Customer>, List<CustomerDTO>>();
+            CreateMap<List<CustomerDTO>, List<Customer>>();
+
             CreateMap<Payment, PaymentDTO>();
             CreateMap<PaymentDTO, Payment>();
 
+            CreateMap<List<Payment>, List<PaymentDTO>>();
+            CreateMap<List<PaymentDTO>, List<Payment>>();
+
             CreateMap<PayingByCounter, PayingByCounterDTO>();
             CreateMap<PayingByCounterDTO, PayingByCounter>();
-            CreateMap<Customer, CustomerDTO>();
-            CreateMap<CustomerDTO, Customer>();
-            CreateMap<Customer, CustomerDTO>();
-            CreateMap<CustomerDTO, Customer>();
+
+            CreateMap<List<PayingByCounter>, List<PayingByCounterDTO>>();
+            CreateMap<List<PayingByCounterDTO>, List<PayingByCounter>>();
+
+            CreateMap<PayingFixedSumma, PayingFixedSummaDTO>();
+            CreateMap<PayingFixedSummaDTO, PayingFixedSumma>();
+
+            CreateMap<List<PayingFixedSumma>, List<PayingFixedSummaDTO>>();
+            CreateMap<List<PayingFixedSummaDTO>, List<PayingFixedSumma>>();
+
+            CreateMap<ServiceProvider, ServiceProviderDTO>();
+            CreateMap<ServiceProviderDTO, ServiceProvider>();
+
+            CreateMap<List<ServiceProvider>, List<ServiceProviderDTO>>();
+            CreateMap<List<ServiceProviderDTO>, List<ServiceProvider>>();
         }
     }
 }
