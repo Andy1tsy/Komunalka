@@ -11,5 +11,9 @@
         public double? RateDiscount { get; set; }
         public int? DiscountIndicationsAmount { get; set; }
         public decimal Summa { get; set; }
+        public PayingByCounterDTO()
+        {
+
+        }
     }
 }

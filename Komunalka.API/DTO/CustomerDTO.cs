@@ -13,5 +13,9 @@ namespace Komunalka.API.DTO
         public string Address { get; set; }
 
         public  List<PaymentDTO> PaymentsDTO { get; set; }
+        public CustomerDTO()
+        {
+            PaymentsDTO = new List<PaymentDTO>();
+        }
     }
 }

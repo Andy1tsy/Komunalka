@@ -13,5 +13,11 @@ namespace Komunalka.API.DTO
 
         public List<PayingByCounterDTO> PayingsByCounterDTO { get; set; }
         public List<PayingFixedSummaDTO> PayingsFixedSummaDTO { get; set; }
+
+        public PaymentDTO()
+        {
+            PayingsByCounterDTO = new List<PayingByCounterDTO>();
+            PayingsFixedSummaDTO = new List<PayingFixedSummaDTO>();
+        }
     }
 }
