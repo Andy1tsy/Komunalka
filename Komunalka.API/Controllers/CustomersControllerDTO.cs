@@ -4,10 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Komunalka.API.DTO;
+using Komunalka.BLL.Services;
 using Komunalka.DAL.KomunalDbContext;
 using Komunalka.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
+using System.Windows;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,43 +22,36 @@ namespace Komunalka.API.Controllers
  
         public class CustomersControllerDTO : ControllerBase
         {
-            private readonly KomunalContext _context;
+            private  KomunalContext _context;
             private IMapper _mapper;
+            private CustomersService _service;
 
             public CustomersControllerDTO(KomunalContext context, IMapper mapper)
             {
                 _context = context;
                 _mapper = mapper;
+                _service = new CustomersService(_context, _mapper);
             }
 
             // GET: api/Customers
             [HttpGet]
-            public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomersDTO()
+            public async Task<IEnumerable<CustomerDTO>> GetCustomersDTO()
             {
-                var customers =  await _context.Customer
-                                               .Include(c => c.Payment)
-                                               .ThenInclude(p => p.PayingByCounter.ToList())
-                                               .ThenInclude(p => p.ServiceProvider)
-                                               .ToListAsync();
-                var cuatomersDTO = _mapper.Map<List<CustomerDTO>>(customers);
-                return cuatomersDTO;
+ 
+                var customersDTO = await Task.Run(() =>_service.GetCustomersDTO());
+                return  customersDTO;
             }
 
             // GET: api/Customers/5
             [HttpGet("{id}")]
             public async Task<ActionResult<CustomerDTO>> GetCustomerDTO(int id)
             {
-            var customer = await _context.Customer.Include(c => c.Payment)
-                                                  .ThenInclude(p => p.PayingByCounter)
-                                                  .ThenInclude(p => p.ServiceProvider)
-                                                  .Where(c => c.Id == id).FirstOrDefaultAsync();
 
-                if (customer == null)
+                var customerDTO = await Task.Run(() =>_service.GetCustomerDTO(id));
+                if (customerDTO == null)
                 {
                     return NotFound();
                 }
-
-                var customerDTO = _mapper.Map<CustomerDTO>(customer);
                 return customerDTO;
             }
 
@@ -62,30 +59,24 @@ namespace Komunalka.API.Controllers
             // To protect from overposting attacks, enable the specific properties you want to bind to, for
             // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
             [HttpPut("{id}")]
-            public async Task<IActionResult> PutCustomer(int id, CustomerDTO customerDTO)
+            public async Task<IActionResult> PutCustomerDTO(int id, CustomerDTO customerDTO)
             {
-            var customer = _mapper.Map<Customer>(customerDTO);
-                if (id != customer.Id)
-                {
-                    return BadRequest();
-                }
-
-                _context.Entry(customer).State = EntityState.Modified;
+ 
 
                 try
                 {
-                    await _context.SaveChangesAsync();
+                    await Task.Run(() => _service.PutCustomerDTO(id, customerDTO));
                     return Ok();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception)
                 {
-                    if (!CustomerExists(id))
+                    if (!_service.CustomerExists(id))
                     {
                         return NotFound();
                     }
                     else
                     {
-                        throw;
+                        return BadRequest();
                     }
                 }
 
@@ -98,15 +89,14 @@ namespace Komunalka.API.Controllers
             [HttpPost]
             public async Task<ActionResult<CustomerDTO>> PostCustomerDTO(CustomerDTO customerDTO)
             {
-            var customer = _mapper.Map<Customer>(customerDTO);
-                _context.Customer.Add(customer);
+
                 try
                 {
-                    await _context.SaveChangesAsync();
+                await Task.Run(() => _service.PostCustomerDTO(customerDTO));
                 }
                 catch (DbUpdateException)
                 {
-                    if (CustomerExists(customer.Id))
+                    if (_service.CustomerExists(customerDTO.Id))
                     {
                         return Conflict();
                     }
@@ -124,22 +114,14 @@ namespace Komunalka.API.Controllers
             [HttpDelete("{id}")]
             public async Task<ActionResult<CustomerDTO>> DeleteCustomerDTO(int id)
             {
-                var customer = await _context.Customer.FindAsync(id);
-                if (customer == null)
+                var customerDTO = await Task.Run(() => _service.DeleteCustomerDTO(id));
+                if (customerDTO == null)
                 {
                     return NotFound();
                 }
-
-                _context.Customer.Remove(customer);
-                await _context.SaveChangesAsync();
-            var customerDTO = _mapper.Map<CustomerDTO>(customer);
-
                 return customerDTO;
             }
 
-            private bool CustomerExists(int id)
-            {
-                return _context.Customer.Any(e => e.Id == id);
-            }
+ 
         }
 }

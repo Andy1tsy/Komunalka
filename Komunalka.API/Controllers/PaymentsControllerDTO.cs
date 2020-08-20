@@ -9,6 +9,7 @@ using Komunalka.DAL.KomunalDbContext;
 using Komunalka.DAL.Models;
 using AutoMapper;
 using Komunalka.API.DTO;
+using Komunalka.BLL.Services;
 
 namespace Komunalka.API.Controllers
 {
@@ -16,13 +17,15 @@ namespace Komunalka.API.Controllers
     [ApiController]
     public class PaymentsControllerDTO : ControllerBase
     {
-        private readonly KomunalContext _context;
+        private  KomunalContext _context;
         private IMapper _mapper;
+        private PaymentsService _service;
 
         public PaymentsControllerDTO(KomunalContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
+            _service = new PaymentsService(_context, _mapper);
         }
 
         // GET: api/PaymentsDTO

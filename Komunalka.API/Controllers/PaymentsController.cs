@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Komunalka.DAL.KomunalDbContext;
 using Komunalka.DAL.Models;
+using AutoMapper;
+using Komunalka.BLL.Services;
+using Komunalka.API.DTO;
 
 namespace Komunalka.API.Controllers
 {
@@ -14,25 +17,29 @@ namespace Komunalka.API.Controllers
     [ApiController]
     public class PaymentsController : ControllerBase
     {
-        private readonly KomunalContext _context;
+        private  KomunalContext _context;
+        private IMapper _mapper;
+        private PaymentsService _service;
 
-        public PaymentsController(KomunalContext context)
+        public PaymentsController(KomunalContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
+            _service = new PaymentsService(context, mapper);
         }
 
         // GET: api/Payments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Payment>>> GetPayment()
+        public async Task<IEnumerable<PaymentDTO>> GetPaymentsDTO(int customerId)
         {
-            return await _context.Payment.ToListAsync();
+            return await Task.Run(() => _service.GetPaymentsDTO(customerId));
         }
 
         // GET: api/Payments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Payment>> GetPayment(int id)
+        public async Task<ActionResult<PaymentDTO>> GetPaymentDTO(int customerId, int id)
         {
-            var payment = await _context.Payment.FindAsync(id);
+            var payment = await Task.Run(() => _service.GetPaymentDTO(customerId, id));
 
             if (payment == null)
             {
@@ -46,22 +53,17 @@ namespace Komunalka.API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPayment(int id, Payment payment)
+        public async Task<IActionResult> PutPaymentDTO(int id, PaymentDTO paymentDTO)
         {
-            if (id != payment.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(payment).State = EntityState.Modified;
+ 
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Task.Run(() => _service.PutPaymentDTO(id, paymentDTO));
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PaymentExists(id))
+                if (!_service.PaymentExists(id))
                 {
                     return NotFound();
                 }
@@ -78,28 +80,22 @@ namespace Komunalka.API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Payment>> PostPayment(Payment payment)
+        public async Task<ActionResult<Payment>> PostPaymentDTO(PaymentDTO paymentDTO)
         {
-            _context.Payment.Add(payment);
-            await _context.SaveChangesAsync();
+            
+            await Task.Run(() => _service.PostPaymentDTO(paymentDTO));
 
-            return CreatedAtAction("GetPayment", new { id = payment.Id }, payment);
+            return CreatedAtAction("GetPaymentDTO", new { id = paymentDTO.Id }, paymentDTO);
         }
 
         // DELETE: api/Payments/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Payment>> DeletePayment(int id)
+        public async Task<ActionResult<Payment>> DeletePayment( int id)
         {
-            var payment = await _context.Payment.FindAsync(id);
-            if (payment == null)
-            {
-                return NotFound();
-            }
+ 
+           var paymentDTO = await Task.Run(() => _service.DeletePaymentDTO(id));
 
-            _context.Payment.Remove(payment);
-            await _context.SaveChangesAsync();
-
-            return payment;
+            return paymentDTO;
         }
 
         private bool PaymentExists(int id)
