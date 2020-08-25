@@ -15,12 +15,12 @@ namespace Komunalka.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PayingsByCountersControllerDTO : ControllerBase
+    public class PayingsByCountersDTOController : ControllerBase
     {
         private readonly KomunalContext _context;
         private IMapper _mapper;
 
-        public PayingsByCountersControllerDTO(KomunalContext context, IMapper mapper)
+        public PayingsByCountersDTOController(KomunalContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

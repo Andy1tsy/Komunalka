@@ -90,7 +90,7 @@ namespace Komunalka.API.Controllers
 
         // DELETE: api/Payments/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Payment>> DeletePayment( int id)
+        public async Task<ActionResult<PaymentDTO>> DeletePayment( int id)
         {
  
            var paymentDTO = await Task.Run(() => _service.DeletePaymentDTO(id));
