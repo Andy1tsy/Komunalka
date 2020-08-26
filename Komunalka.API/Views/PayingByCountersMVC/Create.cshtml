@@ -1,0 +1,85 @@
+﻿@model Komunalka.DAL.Models.PayingByCounter
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create</title>
+</head>
+<body>
+
+<h4>PayingByCounter</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PaymentId" class="control-label"></label>
+                <select asp-for="PaymentId" class ="form-control" asp-items="ViewBag.PaymentId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ServiceProviderId" class="control-label"></label>
+                <select asp-for="ServiceProviderId" class ="form-control" asp-items="ViewBag.ServiceProviderId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Account" class="control-label"></label>
+                <input asp-for="Account" class="form-control" />
+                <span asp-validation-for="Account" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CounterIndicationsCurrent" class="control-label"></label>
+                <input asp-for="CounterIndicationsCurrent" class="form-control" />
+                <span asp-validation-for="CounterIndicationsCurrent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CurrentIndicationsPrevious" class="control-label"></label>
+                <input asp-for="CurrentIndicationsPrevious" class="form-control" />
+                <span asp-validation-for="CurrentIndicationsPrevious" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CounterIndicationsDifference" class="control-label"></label>
+                <input asp-for="CounterIndicationsDifference" class="form-control" />
+                <span asp-validation-for="CounterIndicationsDifference" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RateCommon" class="control-label"></label>
+                <input asp-for="RateCommon" class="form-control" />
+                <span asp-validation-for="RateCommon" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RateDiscount" class="control-label"></label>
+                <input asp-for="RateDiscount" class="form-control" />
+                <span asp-validation-for="RateDiscount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DiscountIndicationsAmount" class="control-label"></label>
+                <input asp-for="DiscountIndicationsAmount" class="form-control" />
+                <span asp-validation-for="DiscountIndicationsAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Summa" class="control-label"></label>
+                <input asp-for="Summa" class="form-control" />
+                <span asp-validation-for="Summa" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+</body>
+</html>
