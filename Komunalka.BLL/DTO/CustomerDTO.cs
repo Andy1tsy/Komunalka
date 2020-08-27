@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Komunalka.API.DTO
+namespace Komunalka.BLL.DTO
 {
     public class CustomerDTO
     {

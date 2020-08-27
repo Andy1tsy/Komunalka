@@ -1,4 +1,4 @@
-﻿namespace Komunalka.API.DTO
+﻿namespace Komunalka.BLL.DTO
 {
     public class PayingByCounterDTO
     {

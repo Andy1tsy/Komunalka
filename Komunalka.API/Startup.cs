@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
-using Komunalka.API.Mapping;
+using Komunalka.BLL.Mapping;
 
 namespace Komunalka.API
 {
@@ -29,7 +29,7 @@ namespace Komunalka.API
         {
             services.AddControllers();
             services.AddSwaggerGen();
-            services.AddAutoMapper(c => c.AddProfile<MappingProfile>(), typeof(Startup));
+            services.AddAutoMapper(c => c.AddProfile<BLL.Mapping.MappingProfile>(), typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

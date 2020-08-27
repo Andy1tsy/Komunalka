@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Komunalka.DAL.KomunalDbContext;
 using Komunalka.DAL.Models;
 using AutoMapper;
-using Komunalka.API.DTO;
+using Komunalka.BLL.DTO;
 using Komunalka.BLL.Services;
 
 namespace Komunalka.API.Controllers

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Komunalka.API.DTO
+namespace Komunalka.BLL.DTO
 {
     public class PaymentDTO
     {
