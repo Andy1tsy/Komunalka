@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Komunalka.DAL.KomunalDbContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +27,12 @@ namespace Komunalka.MVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+
+            services.AddDbContext<KomunalContext>(options => options.UseSqlServer(connection));
+            services.AddSwaggerGen();
+            services.AddAutoMapper(c => c.AddProfile<BLL.Mapping.MappingProfile>(), typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +50,11 @@ namespace Komunalka.MVC
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Komunalka MVC V1");
+            });
 
             app.UseRouting();
 
