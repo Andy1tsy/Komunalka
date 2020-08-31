@@ -25,9 +25,7 @@ namespace Komunalka.BLL.Services
         public IEnumerable<PaymentDTO> GetPaymentsDTO(int customerId)
         {
             var payments = _context.Payment
-                                   .Include(p => p.PayingByCounter.ToList())
-                                   .ThenInclude(p => p.ServiceProvider)
-                                   .Include(p => p.PayingFixedSumma.ToList())
+                                   .Include(p => p.PayingComponent.ToList())
                                    .ThenInclude(p => p.ServiceProvider)
                                    .Where(p => p.CustomerId == customerId)
                                    .ToListAsync();
@@ -38,9 +36,7 @@ namespace Komunalka.BLL.Services
         public PaymentDTO GetPaymentDTO(int customerId, int id)
         {
             var payment = _context.Payment
-                                   .Include(p => p.PayingByCounter.ToList())
-                                   .ThenInclude(p => p.ServiceProvider)
-                                   .Include(p => p.PayingFixedSumma.ToList())
+                                   .Include(p => p.PayingComponent.ToList())
                                    .ThenInclude(p => p.ServiceProvider)
                                    .Where(p => p.CustomerId == customerId)
                                    .Where(c => c.Id == id).FirstOrDefaultAsync();

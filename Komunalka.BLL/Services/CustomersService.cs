@@ -25,10 +25,7 @@ namespace Komunalka.BLL.Services
         public IEnumerable<CustomerDTO> GetCustomersDTO()
         {
             var customers = _context.Customer
-                               .Include(c => c.Payment)
-                               .ThenInclude(p => p.PayingByCounter.ToList())
-                               .ThenInclude(p => p.ServiceProvider)
-                               .ToListAsync();
+                                    .ToListAsync();
             var customersDTO = _mapper.Map<List<CustomerDTO>>(customers);
             return customersDTO;
         }
@@ -36,9 +33,7 @@ namespace Komunalka.BLL.Services
         public CustomerDTO GetCustomerDTO(int id)
         {
             var customer = _context.Customer.Include(c => c.Payment)
-                                       .ThenInclude(p => p.PayingByCounter)
-                                       .ThenInclude(p => p.ServiceProvider)
-                                       .Where(c => c.Id == id).FirstOrDefaultAsync();
+                                   .Where(c => c.Id == id).FirstOrDefaultAsync();
 
             var customerDTO = _mapper.Map<CustomerDTO>(customer);
             return customerDTO;

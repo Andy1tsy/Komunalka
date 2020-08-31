@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Komunalka.BLL.Absract;
+using Komunalka.BLL.Services;
 using Komunalka.DAL.KomunalDbContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,6 +33,8 @@ namespace Komunalka.MVC
             string connection = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<KomunalContext>(options => options.UseSqlServer(connection));
+            services.AddScoped<ICustomersService, CustomersService>();
+            services.AddScoped<IPaymentsService, PaymentsService>();
             services.AddSwaggerGen();
             services.AddAutoMapper(c => c.AddProfile<BLL.Mapping.MappingProfile>(), typeof(Startup));
         }

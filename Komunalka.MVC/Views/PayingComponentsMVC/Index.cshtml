@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Komunalka.DAL.Models.PayingFixedSumma>
+﻿@model IEnumerable<Komunalka.DAL.Models.PayingComponent>
 
 @{
     ViewData["Title"] = "Index";
@@ -17,6 +17,24 @@
                 @Html.DisplayNameFor(model => model.Account)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.CounterIndicationsCurrent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentIndicationsPrevious)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CounterIndicationsDifference)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RateCommon)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RateDiscount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DiscountIndicationsAmount)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Summa)
             </th>
             <th>
@@ -33,6 +51,24 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Account)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CounterIndicationsCurrent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentIndicationsPrevious)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CounterIndicationsDifference)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RateCommon)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RateDiscount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiscountIndicationsAmount)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Summa)

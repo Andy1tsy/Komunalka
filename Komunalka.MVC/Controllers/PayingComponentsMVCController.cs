@@ -10,23 +10,23 @@ using Komunalka.DAL.Models;
 
 namespace Komunalka.MVC.Controllers
 {
-    public class PayingByCountersMVCController : Controller
+    public class PayingComponentsMVCController : Controller
     {
         private readonly KomunalContext _context;
 
-        public PayingByCountersMVCController(KomunalContext context)
+        public PayingComponentsMVCController(KomunalContext context)
         {
             _context = context;
         }
 
-        // GET: PayingByCountersMVC
+        // GET: PayingComponentsMVC
         public async Task<IActionResult> Index()
         {
-            var komunalContext = _context.PayingByCounter.Include(p => p.Payment).Include(p => p.ServiceProvider);
+            var komunalContext = _context.PayingComponent.Include(p => p.Payment).Include(p => p.ServiceProvider);
             return View(await komunalContext.ToListAsync());
         }
 
-        // GET: PayingByCountersMVC/Details/5
+        // GET: PayingComponentsMVC/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,19 +34,19 @@ namespace Komunalka.MVC.Controllers
                 return NotFound();
             }
 
-            var payingByCounter = await _context.PayingByCounter
+            var PayingComponent = await _context.PayingComponent
                 .Include(p => p.Payment)
                 .Include(p => p.ServiceProvider)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (payingByCounter == null)
+            if (PayingComponent == null)
             {
                 return NotFound();
             }
 
-            return View(payingByCounter);
+            return View(PayingComponent);
         }
 
-        // GET: PayingByCountersMVC/Create
+        // GET: PayingComponentsMVC/Create
         public IActionResult Create()
         {
             ViewData["PaymentId"] = new SelectList(_context.Payment, "Id", "Id");
@@ -54,25 +54,25 @@ namespace Komunalka.MVC.Controllers
             return View();
         }
 
-        // POST: PayingByCountersMVC/Create
+        // POST: PayingComponentsMVC/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PaymentId,ServiceProviderId,Account,CounterIndicationsCurrent,CurrentIndicationsPrevious,CounterIndicationsDifference,RateCommon,RateDiscount,DiscountIndicationsAmount,Summa")] PayingByCounter payingByCounter)
+        public async Task<IActionResult> Create([Bind("Id,PaymentId,ServiceProviderId,Account,CounterIndicationsCurrent,CurrentIndicationsPrevious,CounterIndicationsDifference,RateCommon,RateDiscount,DiscountIndicationsAmount,Summa")] PayingComponent PayingComponent)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(payingByCounter);
+                _context.Add(PayingComponent);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PaymentId"] = new SelectList(_context.Payment, "Id", "Id", payingByCounter.PaymentId);
-            ViewData["ServiceProviderId"] = new SelectList(_context.ServiceProvider, "Id", "Name", payingByCounter.ServiceProviderId);
-            return View(payingByCounter);
+            ViewData["PaymentId"] = new SelectList(_context.Payment, "Id", "Id", PayingComponent.PaymentId);
+            ViewData["ServiceProviderId"] = new SelectList(_context.ServiceProvider, "Id", "Name", PayingComponent.ServiceProviderId);
+            return View(PayingComponent);
         }
 
-        // GET: PayingByCountersMVC/Edit/5
+        // GET: PayingComponentsMVC/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -80,24 +80,24 @@ namespace Komunalka.MVC.Controllers
                 return NotFound();
             }
 
-            var payingByCounter = await _context.PayingByCounter.FindAsync(id);
-            if (payingByCounter == null)
+            var PayingComponent = await _context.PayingComponent.FindAsync(id);
+            if (PayingComponent == null)
             {
                 return NotFound();
             }
-            ViewData["PaymentId"] = new SelectList(_context.Payment, "Id", "Id", payingByCounter.PaymentId);
-            ViewData["ServiceProviderId"] = new SelectList(_context.ServiceProvider, "Id", "Name", payingByCounter.ServiceProviderId);
-            return View(payingByCounter);
+            ViewData["PaymentId"] = new SelectList(_context.Payment, "Id", "Id", PayingComponent.PaymentId);
+            ViewData["ServiceProviderId"] = new SelectList(_context.ServiceProvider, "Id", "Name", PayingComponent.ServiceProviderId);
+            return View(PayingComponent);
         }
 
-        // POST: PayingByCountersMVC/Edit/5
+        // POST: PayingComponentsMVC/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PaymentId,ServiceProviderId,Account,CounterIndicationsCurrent,CurrentIndicationsPrevious,CounterIndicationsDifference,RateCommon,RateDiscount,DiscountIndicationsAmount,Summa")] PayingByCounter payingByCounter)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PaymentId,ServiceProviderId,Account,CounterIndicationsCurrent,CurrentIndicationsPrevious,CounterIndicationsDifference,RateCommon,RateDiscount,DiscountIndicationsAmount,Summa")] PayingComponent PayingComponent)
         {
-            if (id != payingByCounter.Id)
+            if (id != PayingComponent.Id)
             {
                 return NotFound();
             }
@@ -106,12 +106,12 @@ namespace Komunalka.MVC.Controllers
             {
                 try
                 {
-                    _context.Update(payingByCounter);
+                    _context.Update(PayingComponent);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PayingByCounterExists(payingByCounter.Id))
+                    if (!PayingComponentExists(PayingComponent.Id))
                     {
                         return NotFound();
                     }
@@ -122,12 +122,12 @@ namespace Komunalka.MVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PaymentId"] = new SelectList(_context.Payment, "Id", "Id", payingByCounter.PaymentId);
-            ViewData["ServiceProviderId"] = new SelectList(_context.ServiceProvider, "Id", "Name", payingByCounter.ServiceProviderId);
-            return View(payingByCounter);
+            ViewData["PaymentId"] = new SelectList(_context.Payment, "Id", "Id", PayingComponent.PaymentId);
+            ViewData["ServiceProviderId"] = new SelectList(_context.ServiceProvider, "Id", "Name", PayingComponent.ServiceProviderId);
+            return View(PayingComponent);
         }
 
-        // GET: PayingByCountersMVC/Delete/5
+        // GET: PayingComponentsMVC/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,32 +135,32 @@ namespace Komunalka.MVC.Controllers
                 return NotFound();
             }
 
-            var payingByCounter = await _context.PayingByCounter
+            var PayingComponent = await _context.PayingComponent
                 .Include(p => p.Payment)
                 .Include(p => p.ServiceProvider)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (payingByCounter == null)
+            if (PayingComponent == null)
             {
                 return NotFound();
             }
 
-            return View(payingByCounter);
+            return View(PayingComponent);
         }
 
-        // POST: PayingByCountersMVC/Delete/5
+        // POST: PayingComponentsMVC/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var payingByCounter = await _context.PayingByCounter.FindAsync(id);
-            _context.PayingByCounter.Remove(payingByCounter);
+            var PayingComponent = await _context.PayingComponent.FindAsync(id);
+            _context.PayingComponent.Remove(PayingComponent);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PayingByCounterExists(int id)
+        private bool PayingComponentExists(int id)
         {
-            return _context.PayingByCounter.Any(e => e.Id == id);
+            return _context.PayingComponent.Any(e => e.Id == id);
         }
     }
 }

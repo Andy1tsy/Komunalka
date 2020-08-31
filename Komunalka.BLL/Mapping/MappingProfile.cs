@@ -24,19 +24,15 @@ namespace Komunalka.BLL.Mapping
             CreateMap<List<Payment>, List<PaymentDTO>>();
             CreateMap<List<PaymentDTO>, List<Payment>>();
 
-            CreateMap<PayingByCounter, PayingByCounterDTO>().
-                      ForMember(dto => dto.ServiceProviderName, cfg => cfg.MapFrom(sr => sr.ServiceProvider.Name));
-            CreateMap<PayingByCounterDTO, PayingByCounter>();
+            CreateMap<PayingComponent, PayingComponentDTO>().
+                      ForMember(dto => dto.ServiceProviderName, cfg => cfg.MapFrom(sr => sr.ServiceProvider.Name)).
+                      ForMember(dto => dto.ServiceType, cfg => cfg.MapFrom(sr => sr.ServiceProvider.ServiceType));
+            CreateMap<PayingComponentDTO, PayingComponent>();
 
-            CreateMap<List<PayingByCounter>, List<PayingByCounterDTO>>();
-            CreateMap<List<PayingByCounterDTO>, List<PayingByCounter>>();
+            CreateMap<List<PayingComponent>, List<PayingComponentDTO>>();
+            CreateMap<List<PayingComponentDTO>, List<PayingComponent>>();
 
-            CreateMap<PayingFixedSumma, PayingFixedSummaDTO>().
-                      ForMember( dto => dto.ServiceProviderName, cfg => cfg.MapFrom(sr => sr.ServiceProvider.Name) );
-            CreateMap<PayingFixedSummaDTO, PayingFixedSumma>();
 
-            CreateMap<List<PayingFixedSumma>, List<PayingFixedSummaDTO>>();
-            CreateMap<List<PayingFixedSummaDTO>, List<PayingFixedSumma>>();
 
             CreateMap<ServiceProvider, ServiceProviderDTO>();
             CreateMap<ServiceProviderDTO, ServiceProvider>();

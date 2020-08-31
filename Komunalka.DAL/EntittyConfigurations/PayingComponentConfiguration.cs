@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Komunalka.DAL.Models
 {
-    public class PayingByCounterConfiguration : IEntityTypeConfiguration<PayingByCounter>
+    public class PayingComponentConfiguration : IEntityTypeConfiguration<PayingComponent>
     {
-        public void Configure(EntityTypeBuilder<PayingByCounter> builder)
+        public void Configure(EntityTypeBuilder<PayingComponent> builder)
         {
-            builder.ToTable("PayingByCounter").HasKey(e => e.Id);
+            builder.ToTable("PayingComponent").HasKey(e => e.Id);
 
             builder.Property(e => e.Account)
                     .IsRequired()
@@ -19,16 +19,16 @@ namespace Komunalka.DAL.Models
             builder.Property(e => e.Summa).HasColumnType("money");
 
             builder.HasOne(d => d.Payment)
-                    .WithMany(p => p.PayingByCounter)
+                    .WithMany(p => p.PayingComponent)
                     .HasForeignKey(d => d.PaymentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PayingByC__Payme__5CD6CB2B");
+                    .HasConstraintName("FK__PayingCom__Payme__5CD6CB2B");
 
             builder.HasOne(d => d.ServiceProvider)
-                    .WithMany(p => p.PayingByCounter)
+                    .WithMany(p => p.PayingComponent)
                     .HasForeignKey(d => d.ServiceProviderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PayingByC__Servi__5DCAEF64");
+                    .HasConstraintName("FK__PayingCom__Servi__5DCAEF64");
          
         }
     }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Komunalka.BLL.Services
 {
-    class PayingsByCounterService
+    class PayingComponentsService
     {
     }
 }

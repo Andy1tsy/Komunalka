@@ -1,9 +1,12 @@
-﻿namespace Komunalka.BLL.DTO
+﻿using Komunalka.DAL.Models;
+
+namespace Komunalka.BLL.DTO
 {
-    public class PayingByCounterDTO
+    public class PayingComponentDTO
     {
         public string ServiceProviderName { get; set; }
         public string Account { get; set; }
+        public ServiceType ServiceType { get; set; }
         public int CounterIndicationsCurrent { get; set; }
         public int CurrentIndicationsPrevious { get; set; }
         public int IndicationsDifference { get; set; }
@@ -11,7 +14,7 @@
         public double? RateDiscount { get; set; }
         public int? DiscountIndicationsAmount { get; set; }
         public decimal Summa { get; set; }
-        public PayingByCounterDTO()
+        public PayingComponentDTO()
         {
 
         }

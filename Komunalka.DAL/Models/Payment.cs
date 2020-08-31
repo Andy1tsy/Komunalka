@@ -7,8 +7,7 @@ namespace Komunalka.DAL.Models
     {
         public Payment()
         {
-            PayingByCounter = new HashSet<PayingByCounter>();
-            PayingFixedSumma = new HashSet<PayingFixedSumma>();
+            PayingComponent = new HashSet<PayingComponent>();
         }
 
         public int Id { get; set; }
@@ -18,7 +17,6 @@ namespace Komunalka.DAL.Models
         public DateTime Timestamp { get; set; }
 
         public virtual Customer Customer { get; set; }
-        public virtual ICollection<PayingByCounter> PayingByCounter { get; set; }
-        public virtual ICollection<PayingFixedSumma> PayingFixedSumma { get; set; }
+        public virtual ICollection<PayingComponent> PayingComponent { get; set; }
     }
 }

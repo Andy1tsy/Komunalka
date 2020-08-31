@@ -7,14 +7,13 @@ namespace Komunalka.DAL.Models
     {
         public ServiceProvider()
         {
-            PayingByCounter = new HashSet<PayingByCounter>();
-            PayingFixedSumma = new HashSet<PayingFixedSumma>();
+            PayingComponent = new HashSet<PayingComponent>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public ServiceType ServiceType { get; set; }
 
-        public virtual ICollection<PayingByCounter> PayingByCounter { get; set; }
-        public virtual ICollection<PayingFixedSumma> PayingFixedSumma { get; set; }
+        public virtual ICollection<PayingComponent> PayingComponent { get; set; }
     }
 }

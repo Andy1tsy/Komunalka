@@ -38,8 +38,8 @@ namespace Komunalka.API
             services.AddSwaggerGen();
             services.AddAutoMapper(c => c.AddProfile<MappingProfile>(), typeof(Startup));
             services.AddDbContext<KomunalContext>(options => options.UseSqlServer(connection));
-            services.AddScoped(typeof(ICustomersService), typeof(CustomersService));
-            services.AddScoped(typeof(IPaymentsService), typeof(PaymentsService));
+            services.AddScoped<ICustomersService, CustomersService>();
+            services.AddScoped<IPaymentsService, PaymentsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

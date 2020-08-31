@@ -11,13 +11,11 @@ namespace Komunalka.BLL.DTO
         public int Month { get; set; }
         public DateTime Timestamp { get; set; }
 
-        public List<PayingByCounterDTO> PayingsByCounterDTO { get; set; }
-        public List<PayingFixedSummaDTO> PayingsFixedSummaDTO { get; set; }
+        public List<PayingComponentDTO> PayingComponentsDTO { get; set; }
 
         public PaymentDTO()
         {
-            PayingsByCounterDTO = new List<PayingByCounterDTO>();
-            PayingsFixedSummaDTO = new List<PayingFixedSummaDTO>();
+            PayingComponentsDTO = new List<PayingComponentDTO>();
         }
     }
 }

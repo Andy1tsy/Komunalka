@@ -15,55 +15,55 @@ namespace Komunalka.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PayingsFixedSummasDTOController : ControllerBase
+    public class PayingComponentsDTOController : ControllerBase
     {
         private readonly KomunalContext _context;
         private IMapper _mapper;
 
-        public PayingsFixedSummasDTOController(KomunalContext context, IMapper mapper)
+        public PayingComponentsDTOController(KomunalContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        // GET: api/PayingsFixedSummas
+        // GET: api/PayingsByCounters
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PayingFixedSummaDTO>>> GetPayingsFixedSummaDTO()
+        public async Task<ActionResult<IEnumerable<PayingComponentDTO>>> GetPayingComponentsDTO(int paymentId)
         {
-            var payingsFixedSumma = await _context.PayingFixedSumma.ToListAsync();
-            var payingsFixedSummaDTO = _mapper.Map<List<PayingFixedSummaDTO>>(payingsFixedSumma);
-            return payingsFixedSummaDTO;
+            var payingComponents = await _context.PayingComponent.Where(c => c.PaymentId == paymentId).ToListAsync();
+            var payingComponentsDTO = _mapper.Map<List<PayingComponentDTO>>(payingComponents);
+            return payingComponentsDTO;
         }
 
         // GET: api/PayingsByCounters/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PayingFixedSummaDTO>> GetPayingFixedSummaDTO(int id)
+        public async Task<ActionResult<PayingComponentDTO>> GetPayingComponentDTO(int id)
         {
-            var payingFixedSumma = await _context.PayingFixedSumma.FindAsync(id);
+            var payingComponent = await _context.PayingComponent.FindAsync(id);
 
-            if (payingFixedSumma == null)
+            if (payingComponent == null)
             {
                 return NotFound();
             }
 
-            var payingFixedSummaDTO = _mapper.Map<PayingFixedSummaDTO>(payingFixedSumma);
+            var payingComponentDTO = _mapper.Map<PayingComponentDTO>(payingComponent);
 
-            return payingFixedSummaDTO;
+            return payingComponentDTO;
         }
 
         // PUT: api/PayingsByCounters/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPayingFixedSummaDTO(int id, PayingFixedSummaDTO payingFixedSummaDTO)
+        public async Task<IActionResult> PutPayingComponentDTO(int id, PayingComponentDTO PayingComponentDTO)
         {
-            var payingFixedSumma = _mapper.Map<PayingFixedSumma>(payingFixedSummaDTO);
-            if (id != payingFixedSumma.Id)
+            var PayingComponent = _mapper.Map<PayingComponent>(PayingComponentDTO);
+            if (id != PayingComponent.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(payingFixedSumma).State = EntityState.Modified;
+            _context.Entry(PayingComponent).State = EntityState.Modified;
 
             try
             {
@@ -72,7 +72,7 @@ namespace Komunalka.API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PayingFixedSummaExists(id))
+                if (!PayingComponentExists(id))
                 {
                     return NotFound();
                 }
@@ -89,17 +89,17 @@ namespace Komunalka.API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<PayingFixedSummaDTO>> PostPayingFixedSummaDTO(PayingFixedSummaDTO payingFixedSummaDTO)
+        public async Task<ActionResult<PayingComponentDTO>> PostPayingComponentDTO(PayingComponentDTO PayingComponentDTO)
         {
-            var payingFixedSumma = _mapper.Map<PayingFixedSumma>(payingFixedSummaDTO);
-            _context.PayingFixedSumma.Add(payingFixedSumma);
+            var payingComponent = _mapper.Map<PayingComponent>(PayingComponentDTO);
+            _context.PayingComponent.Add(payingComponent);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (PayingFixedSummaExists(payingFixedSumma.Id))
+                if (PayingComponentExists(payingComponent.Id))
                 {
                     return Conflict();
                 }
@@ -109,29 +109,29 @@ namespace Komunalka.API.Controllers
                 }
             }
 
-            return CreatedAtAction("GetPayingFixedSummaDTO", new { id = payingFixedSumma.Id }, payingFixedSummaDTO);
+            return CreatedAtAction("GetPayingComponent", new { id = payingComponent.Id }, PayingComponentDTO);
         }
 
         // DELETE: api/PayingsByCounters/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<PayingFixedSummaDTO>> DeletePayingFixedSumma(int id)
+        public async Task<ActionResult<PayingComponentDTO>> DeletePayingComponent(int id)
         {
-            var payingFixedSumma = await _context.PayingFixedSumma.FindAsync(id);
-            if (payingFixedSumma == null)
+            var PayingComponent = await _context.PayingComponent.FindAsync(id);
+            if (PayingComponent == null)
             {
                 return NotFound();
             }
 
-            _context.PayingFixedSumma.Remove(payingFixedSumma);
+            _context.PayingComponent.Remove(PayingComponent);
             await _context.SaveChangesAsync();
 
-            var payingFixedSummaDTO = _mapper.Map<PayingFixedSummaDTO>(payingFixedSumma);
-            return payingFixedSummaDTO;
+            var PayingComponentDTO = _mapper.Map<PayingComponentDTO>(PayingComponent);
+            return PayingComponentDTO;
         }
 
-        private bool PayingFixedSummaExists(int id)
+        private bool PayingComponentExists(int id)
         {
-            return _context.PayingFixedSumma.Any(e => e.Id == id);
+            return _context.PayingComponent.Any(e => e.Id == id);
         }
     }
 }

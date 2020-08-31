@@ -30,9 +30,9 @@ namespace Komunalka.API.Controllers
 
         // GET: api/PaymentsDTO
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PaymentDTO>>> GetPaymentsDTO()
+        public async Task<ActionResult<IEnumerable<PaymentDTO>>> GetPaymentsDTO(int customerId)
         {
-            var payments = await _context.Payment.ToListAsync();
+            var payments = await _context.Payment.Where(p => p.CustomerId == customerId).ToListAsync();
             var paymentsDTO = _mapper.Map<List<PaymentDTO>>(payments);
             return paymentsDTO;
         }

@@ -17,8 +17,7 @@ namespace Komunalka.DAL.KomunalDbContext
         }
 
         public virtual DbSet<Customer> Customer { get; set; }
-        public virtual DbSet<PayingByCounter> PayingByCounter { get; set; }
-        public virtual DbSet<PayingFixedSumma> PayingFixedSumma { get; set; }
+        public virtual DbSet<PayingComponent> PayingComponent { get; set; }
         public virtual DbSet<Payment> Payment { get; set; }
         public virtual DbSet<ServiceProvider> ServiceProvider { get; set; }
 
@@ -35,9 +34,7 @@ namespace Komunalka.DAL.KomunalDbContext
         {
             modelBuilder.ApplyConfiguration(new CustomerConfiguration());
 
-            modelBuilder.ApplyConfiguration(new PayingByCounterConfiguration());
-
-            modelBuilder.ApplyConfiguration(new PayingFixedSummaConfiguration());
+            modelBuilder.ApplyConfiguration(new PayingComponentConfiguration());
 
             modelBuilder.ApplyConfiguration(new PaymentConfiguration());
 
