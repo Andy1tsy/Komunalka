@@ -10,6 +10,7 @@ using Komunalka.DAL.Models;
 using AutoMapper;
 using Komunalka.BLL.DTO;
 using Komunalka.BLL.Services;
+using Komunalka.BLL.Absract;
 
 namespace Komunalka.API.Controllers
 {
@@ -19,7 +20,7 @@ namespace Komunalka.API.Controllers
     {
         private  KomunalContext _context;
         private IMapper _mapper;
-        private PaymentsService _service;
+        private IPaymentsService _service;
 
         public PaymentsDTOController(KomunalContext context, IMapper mapper)
         {
@@ -30,10 +31,9 @@ namespace Komunalka.API.Controllers
 
         // GET: api/PaymentsDTO
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PaymentDTO>>> GetPaymentsDTO(int customerId)
+        public async Task<IEnumerable<PaymentDTO>> GetPaymentsDTO(int customerId)
         {
-            var payments = await _context.Payment.Where(p => p.CustomerId == customerId).ToListAsync();
-            var paymentsDTO = _mapper.Map<List<PaymentDTO>>(payments);
+            var paymentsDTO = await Task.Run(() => _service.GetPaymentsDTO(customerId));
             return paymentsDTO;
         }
 
@@ -41,15 +41,12 @@ namespace Komunalka.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PaymentDTO>> GetPaymentDTO(int id)
         {
-            var payment = await _context.Payment.FindAsync(id);
+            var paymentDTO = await Task.Run(() => _service.GetPaymentDTO(id));
 
-            if (payment == null)
+            if (paymentDTO == null)
             {
                 return NotFound();
             }
-
-            var paymentDTO = _mapper.Map<PaymentDTO>(payment);
-
             return paymentDTO;
         }
 
@@ -59,22 +56,18 @@ namespace Komunalka.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPaymentDTO(int id, PaymentDTO paymentDTO)
         {
-            var payment = _mapper.Map<Payment>(paymentDTO);
-            if (id != payment.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(payment).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await Task.Run(() => _service.PutPaymentDTO(id, paymentDTO));
                 return Ok();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PaymentExists(id))
+                if (id != paymentDTO.Id)
+                {
+                    return BadRequest();
+                }
+                if (!_service.PaymentExists(id))
                 {
                     return NotFound();
                 }
@@ -93,15 +86,14 @@ namespace Komunalka.API.Controllers
         [HttpPost]
         public async Task<ActionResult<PaymentDTO>> PostPaymentDTO(PaymentDTO paymentDTO)
         {
-            var payment = _mapper.Map<Payment>(paymentDTO);
-            _context.Payment.Add(payment);
+
             try
             {
-                await _context.SaveChangesAsync();
+                await Task.Run(() => _service.PostPaymentDTO( paymentDTO));
             }
             catch (DbUpdateException)
             {
-                if (PaymentExists(payment.Id))
+                if (_service.PaymentExists(paymentDTO.Id))
                 {
                     return Conflict();
                 }
@@ -111,29 +103,25 @@ namespace Komunalka.API.Controllers
                 }
             }
 
-            return CreatedAtAction("GetPaymentDTO", new { id = payment.Id }, paymentDTO);
+            return CreatedAtAction("GetPaymentDTO", new { id = paymentDTO.Id }, paymentDTO);
         }
 
         // DELETE: api/PayingsByCounters/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<PaymentDTO>> DeletePaymentDTO(int id)
         {
-            var payment = await _context.Payment.FindAsync(id);
-            if (payment == null)
+            var paymentDTO = await Task.Run(() => _service.DeletePaymentDTO(id));
+            if (paymentDTO == null)
             {
                 return NotFound();
             }
-
-            _context.Payment.Remove(payment);
-            await _context.SaveChangesAsync();
-
-            var paymentDTO = _mapper.Map<PaymentDTO>(payment);
+  
             return paymentDTO;
         }
 
-        private bool PaymentExists(int id)
-        {
-            return _context.Payment.Any(e => e.Id == id);
-        }
+        //private bool PaymentExists(int id)
+        //{
+        //    return _context.Payment.Any(e => e.Id == id);
+        //}
     }
 }

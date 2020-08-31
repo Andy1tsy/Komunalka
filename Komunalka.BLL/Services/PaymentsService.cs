@@ -24,21 +24,19 @@ namespace Komunalka.BLL.Services
 
         public IEnumerable<PaymentDTO> GetPaymentsDTO(int customerId)
         {
-            var payments = _context.Payment
-                                   .Include(p => p.PayingComponent.ToList())
-                                   .ThenInclude(p => p.ServiceProvider)
-                                   .Where(p => p.CustomerId == customerId)
-                                   .ToListAsync();
-            var paymentsDTO = _mapper.Map<List<PaymentDTO>>(payments);
-            return paymentsDTO;
+
+                var payments =  _context.Payment.Where(p => p.CustomerId == customerId)
+                                        .ToListAsync();
+                var paymentsDTO = _mapper.Map<List<PaymentDTO>>(payments);
+                return paymentsDTO;
+            
         }
 
-        public PaymentDTO GetPaymentDTO(int customerId, int id)
+        public PaymentDTO GetPaymentDTO(int id)
         {
             var payment = _context.Payment
                                    .Include(p => p.PayingComponent.ToList())
                                    .ThenInclude(p => p.ServiceProvider)
-                                   .Where(p => p.CustomerId == customerId)
                                    .Where(c => c.Id == id).FirstOrDefaultAsync();
 
             var paymentDTO = _mapper.Map<PaymentDTO>(payment);
@@ -50,7 +48,6 @@ namespace Komunalka.BLL.Services
             var payment = _mapper.Map<Payment>(paymentDTO);
             _context.Entry(payment).State = EntityState.Modified;
             _context.SaveChangesAsync();
-
         }
 
         public void PostPaymentDTO(PaymentDTO paymentDTO)
