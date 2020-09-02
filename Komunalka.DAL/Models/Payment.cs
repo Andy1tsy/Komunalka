@@ -14,6 +14,7 @@ namespace Komunalka.DAL.Models
         public int CustomerId { get; set; }
         public int Year { get; set; }
         public int Month { get; set; }
+        public decimal TotalSumma { get; set; }
         public DateTime Timestamp { get; set; }
 
         public virtual Customer Customer { get; set; }

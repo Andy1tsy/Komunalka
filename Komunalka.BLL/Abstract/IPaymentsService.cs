@@ -1,14 +1,14 @@
 ﻿using Komunalka.BLL.DTO;
-using Komunalka.DAL.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Komunalka.BLL.Absract
+namespace Komunalka.BLL.Abstract
 {
     public interface IPaymentsService
     {
-        PaymentDTO DeletePaymentDTO(int id);
-        PaymentDTO GetPaymentDTO(int id);
-        IEnumerable<PaymentDTO> GetPaymentsDTO(int customerId);
+        Task<PaymentDTO> DeletePaymentDTO(int id);
+        Task<PaymentDTO> GetPaymentDTO(int id);
+        IAsyncEnumerable<PaymentDTO> GetPaymentsDTO(int customerId);
         bool PaymentExists(int id);
         void PostPaymentDTO(PaymentDTO paymentDTO);
         void PutPaymentDTO(int id, PaymentDTO paymentDTO);

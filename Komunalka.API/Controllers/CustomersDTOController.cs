@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using System.Windows;
+using Komunalka.BLL.Abstract;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -24,22 +25,25 @@ namespace Komunalka.API.Controllers
         {
             private  KomunalContext _context;
             private IMapper _mapper;
-            private CustomersService _service;
+            private ICustomersService _service;
 
-            public CustomersDTOController(KomunalContext context, IMapper mapper)
+            public CustomersDTOController(KomunalContext context, IMapper mapper, ICustomersService service)
             {
                 _context = context;
                 _mapper = mapper;
-                _service = new CustomersService(_context, _mapper);
+                _service = service;
             }
 
             // GET: api/Customers
             [HttpGet]
-            public async Task<IEnumerable<CustomerDTO>> GetCustomersDTO()
+        //
+        //  здесь непонятно, как получить ActionResult ? без него работает
+        //
+        public async Task<IEnumerable<CustomerDTO>> GetCustomersDTO()
             {
  
                 var customersDTO = await Task.Run(() =>_service.GetCustomersDTO());
-                return  customersDTO;
+                return (IEnumerable<CustomerDTO>)customersDTO;
             }
 
             // GET: api/Customers/5

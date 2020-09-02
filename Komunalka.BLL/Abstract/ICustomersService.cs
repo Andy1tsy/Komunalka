@@ -1,14 +1,15 @@
 ﻿using Komunalka.BLL.DTO;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Komunalka.BLL.Absract
+namespace Komunalka.BLL.Abstract
 {
     public interface ICustomersService
     {
         bool CustomerExists(int id);
-        CustomerDTO DeleteCustomerDTO(int id);
-        CustomerDTO GetCustomerDTO(int id);
-        IEnumerable<CustomerDTO> GetCustomersDTO();
+        Task<CustomerDTO> DeleteCustomerDTO(int id);
+        Task<CustomerDTO> GetCustomerDTO(int id);
+        IAsyncEnumerable<CustomerDTO> GetCustomersDTO();
         void PostCustomerDTO(CustomerDTO customerDTO);
         void PutCustomerDTO(int id, CustomerDTO customerDTO);
     }

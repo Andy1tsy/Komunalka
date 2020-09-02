@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Komunalka.BLL.Abstract;
 using Komunalka.BLL.DTO;
+using Komunalka.BLL.Services;
 using Komunalka.DAL.KomunalDbContext;
 using Komunalka.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,35 +21,35 @@ namespace Komunalka.API.Controllers
     {
         private readonly KomunalContext _context;
         private IMapper _mapper;
+        private IPayingComponentsService _service;
 
-        public PayingComponentsDTOController(KomunalContext context, IMapper mapper)
+        public PayingComponentsDTOController(KomunalContext context, IMapper mapper, IPayingComponentsService service)
         {
             _context = context;
             _mapper = mapper;
+            _service = service;
         }
 
         // GET: api/PayingsByCounters
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PayingComponentDTO>>> GetPayingComponentsDTO(int paymentId)
+        //
+        //  здесь непонятно, как получить ActionResult ? без него работает
+        //
+        public async Task<IAsyncEnumerable<PayingComponentDTO>> GetPayingComponentsDTO(int paymentId)
         {
-            var payingComponents = await _context.PayingComponent.Where(c => c.PaymentId == paymentId).ToListAsync();
-            var payingComponentsDTO = _mapper.Map<List<PayingComponentDTO>>(payingComponents);
-            return payingComponentsDTO;
+            var payingComponentsDTO = await Task.Run( () => _service.GetPayingComponentsDTO(paymentId));
+            return  payingComponentsDTO;
         }
 
         // GET: api/PayingsByCounters/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PayingComponentDTO>> GetPayingComponentDTO(int id)
         {
-            var payingComponent = await _context.PayingComponent.FindAsync(id);
-
-            if (payingComponent == null)
+            var payingComponentDTO = await Task.Run(() => _service.GetPayingComponentDTO(id));
+            if (payingComponentDTO == null)
             {
                 return NotFound();
             }
-
-            var payingComponentDTO = _mapper.Map<PayingComponentDTO>(payingComponent);
-
             return payingComponentDTO;
         }
 
@@ -55,24 +57,21 @@ namespace Komunalka.API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPayingComponentDTO(int id, PayingComponentDTO PayingComponentDTO)
+        public async Task<IActionResult> PutPayingComponentDTO(int id, PayingComponentDTO payingComponentDTO)
         {
-            var PayingComponent = _mapper.Map<PayingComponent>(PayingComponentDTO);
-            if (id != PayingComponent.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(PayingComponent).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Task.Run(() =>_service.PutPayingComponentDTO(id, payingComponentDTO));
                 return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception)
             {
-                if (!PayingComponentExists(id))
+                if (id != payingComponentDTO.Id)
+                {
+                    return BadRequest();
+                }
+                if (!_service.PayingComponentExists(id))
                 {
                     return NotFound();
                 }
@@ -89,17 +88,15 @@ namespace Komunalka.API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<PayingComponentDTO>> PostPayingComponentDTO(PayingComponentDTO PayingComponentDTO)
+        public async Task<ActionResult<PayingComponentDTO>> PostPayingComponentDTO(PayingComponentDTO payingComponentDTO)
         {
-            var payingComponent = _mapper.Map<PayingComponent>(PayingComponentDTO);
-            _context.PayingComponent.Add(payingComponent);
             try
             {
-                await _context.SaveChangesAsync();
+                await Task.Run(() => _service.PostPayingComponentDTO(payingComponentDTO));
             }
             catch (DbUpdateException)
             {
-                if (PayingComponentExists(payingComponent.Id))
+                if (_service.PayingComponentExists(payingComponentDTO.Id))
                 {
                     return Conflict();
                 }
@@ -109,29 +106,25 @@ namespace Komunalka.API.Controllers
                 }
             }
 
-            return CreatedAtAction("GetPayingComponent", new { id = payingComponent.Id }, PayingComponentDTO);
+            return CreatedAtAction("GetPayingComponent", new { id = payingComponentDTO.Id }, payingComponentDTO);
         }
 
         // DELETE: api/PayingsByCounters/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<PayingComponentDTO>> DeletePayingComponent(int id)
         {
-            var PayingComponent = await _context.PayingComponent.FindAsync(id);
-            if (PayingComponent == null)
+
+            var payingComponentDTO = await Task.Run(() => _service.DeletePayingComponent(id));
+            if (payingComponentDTO == null)
             {
                 return NotFound();
             }
-
-            _context.PayingComponent.Remove(PayingComponent);
-            await _context.SaveChangesAsync();
-
-            var PayingComponentDTO = _mapper.Map<PayingComponentDTO>(PayingComponent);
-            return PayingComponentDTO;
+            return payingComponentDTO;
         }
 
-        private bool PayingComponentExists(int id)
-        {
-            return _context.PayingComponent.Any(e => e.Id == id);
-        }
+        //public bool PayingComponentExists(int id)
+        //{
+        //    return _context.PayingComponent.Any(e => e.Id == id);
+        //}
     }
 }

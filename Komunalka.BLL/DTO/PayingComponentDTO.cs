@@ -4,6 +4,7 @@ namespace Komunalka.BLL.DTO
 {
     public class PayingComponentDTO
     {
+        public int Id { get; set; }
         public string ServiceProviderName { get; set; }
         public string Account { get; set; }
         public ServiceType ServiceType { get; set; }

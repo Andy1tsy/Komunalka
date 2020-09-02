@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
-using Komunalka.BLL.Absract;
+using Komunalka.BLL.Abstract;
 using Komunalka.BLL.DTO;
 using Komunalka.DAL.KomunalDbContext;
 using Komunalka.DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Komunalka.BLL.Services
 {
@@ -22,19 +21,18 @@ namespace Komunalka.BLL.Services
             _mapper = mapper;
         }
 
-        public IEnumerable<PaymentDTO> GetPaymentsDTO(int customerId)
+        public IAsyncEnumerable<PaymentDTO> GetPaymentsDTO(int customerId)
         {
 
-                var payments =  _context.Payment.Where(p => p.CustomerId == customerId)
-                                        .ToListAsync();
-                var paymentsDTO = _mapper.Map<List<PaymentDTO>>(payments);
-                return paymentsDTO;
-            
+            var payments = _context.Payment.Where(p => p.CustomerId == customerId)
+                                    .ToListAsync();
+            var paymentsDTO = _mapper.Map<List<PaymentDTO>>(payments);
+            return (IAsyncEnumerable<PaymentDTO>)paymentsDTO;
         }
 
-        public PaymentDTO GetPaymentDTO(int id)
+        public async Task<PaymentDTO> GetPaymentDTO(int id)
         {
-            var payment = _context.Payment
+            var payment = await _context.Payment
                                    .Include(p => p.PayingComponent.ToList())
                                    .ThenInclude(p => p.ServiceProvider)
                                    .Where(c => c.Id == id).FirstOrDefaultAsync();
@@ -43,31 +41,30 @@ namespace Komunalka.BLL.Services
             return paymentDTO;
         }
 
-        public void PutPaymentDTO(int id, PaymentDTO paymentDTO)
+        public async void PutPaymentDTO(int id, PaymentDTO paymentDTO)
         {
             var payment = _mapper.Map<Payment>(paymentDTO);
             _context.Entry(payment).State = EntityState.Modified;
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
-        public void PostPaymentDTO(PaymentDTO paymentDTO)
+        public async void PostPaymentDTO(PaymentDTO paymentDTO)
         {
             var payment = _mapper.Map<Payment>(paymentDTO);
             _context.Payment.Add(payment);
-            _context.SaveChangesAsync();
-
+            await _context.SaveChangesAsync();
         }
 
-        public PaymentDTO DeletePaymentDTO(int id)
+        public async Task<PaymentDTO> DeletePaymentDTO(int id)
         {
-            var payment = _context.Payment.Find(id);
+            var payment = await _context.Payment.FindAsync(id);
             if (payment == null)
             {
                 return null;
             }
 
             _context.Payment.Remove(payment);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             var paymentDTO = _mapper.Map<PaymentDTO>(payment);
             return paymentDTO;
         }

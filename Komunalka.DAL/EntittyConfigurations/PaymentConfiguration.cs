@@ -16,6 +16,8 @@ namespace Komunalka.DAL.Models
 
             builder.Property(e => e.Month).IsRequired();
 
+            builder.Property(e => e.TotalSumma).HasColumnType("money");
+
             builder.Property(e => e.Timestamp).HasColumnType("datetime");
 
             builder.HasOne(d => d.Customer)

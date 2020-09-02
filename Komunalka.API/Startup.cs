@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
 using Komunalka.BLL.Mapping;
-using Komunalka.BLL.Absract;
+using Komunalka.BLL.Abstract;
 using Komunalka.BLL.Services;
 using Komunalka.DAL.KomunalDbContext;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +40,8 @@ namespace Komunalka.API
             services.AddDbContext<KomunalContext>(options => options.UseSqlServer(connection));
             services.AddScoped<ICustomersService, CustomersService>();
             services.AddScoped<IPaymentsService, PaymentsService>();
+            services.AddScoped<IPayingComponentsService, PayingComponentsService>();
+            services.AddScoped<IServiceProvidersService, ServiceProvidersService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

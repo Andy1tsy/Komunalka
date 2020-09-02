@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Komunalka.DAL.Models;
-using Komunalka.BLL.Absract;
+using System.Threading.Tasks;
+using Komunalka.BLL.Abstract;
 
 namespace Komunalka.BLL.Services
 {
@@ -22,49 +23,48 @@ namespace Komunalka.BLL.Services
             _mapper = mapper;
         }
 
-        public IEnumerable<CustomerDTO> GetCustomersDTO()
+        public IAsyncEnumerable<CustomerDTO> GetCustomersDTO()
         {
             var customers = _context.Customer
                                     .ToListAsync();
             var customersDTO = _mapper.Map<List<CustomerDTO>>(customers);
-            return customersDTO;
+            return (IAsyncEnumerable<CustomerDTO>)customersDTO;
         }
 
-        public CustomerDTO GetCustomerDTO(int id)
+        public async Task<CustomerDTO> GetCustomerDTO(int id)
         {
-            var customer = _context.Customer.Include(c => c.Payment)
+            var customer = await _context.Customer.Include(c => c.Payment)
                                    .Where(c => c.Id == id).FirstOrDefaultAsync();
 
             var customerDTO = _mapper.Map<CustomerDTO>(customer);
             return customerDTO;
         }
 
-        public void PutCustomerDTO(int id, CustomerDTO customerDTO)
+        public async void PutCustomerDTO(int id, CustomerDTO customerDTO)
         {
             var customer = _mapper.Map<Customer>(customerDTO);
             _context.Entry(customer).State = EntityState.Modified;
-            _context.SaveChangesAsync();
-
+            await _context.SaveChangesAsync();
         }
 
-        public void PostCustomerDTO(CustomerDTO customerDTO)
+        public async void PostCustomerDTO(CustomerDTO customerDTO)
         {
             var customer = _mapper.Map<Customer>(customerDTO);
             _context.Customer.Add(customer);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
         }
 
-        public CustomerDTO DeleteCustomerDTO(int id)
+        public async Task<CustomerDTO> DeleteCustomerDTO(int id)
         {
-            var customer = _context.Customer.Find(id);
+            var customer = await _context.Customer.FindAsync(id);
             if (customer == null)
             {
                 return null;
             }
 
             _context.Customer.Remove(customer);
-            _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             var customerDTO = _mapper.Map<CustomerDTO>(customer);
             return customerDTO;
         }

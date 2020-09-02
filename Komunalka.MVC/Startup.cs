@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Komunalka.BLL.Absract;
+using Komunalka.BLL.Abstract;
 using Komunalka.BLL.Services;
 using Komunalka.DAL.KomunalDbContext;
 using Microsoft.AspNetCore.Builder;

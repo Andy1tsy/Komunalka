@@ -9,6 +9,7 @@ using Komunalka.DAL.KomunalDbContext;
 using Komunalka.DAL.Models;
 using AutoMapper;
 using Komunalka.BLL.DTO;
+using Komunalka.BLL.Abstract;
 
 namespace Komunalka.API.Controllers
 {
@@ -18,15 +19,20 @@ namespace Komunalka.API.Controllers
     {
         private readonly KomunalContext _context;
         private IMapper _mapper;
+        private IServiceProvidersService _service;
 
-        public ServiceProvidersDTOController(KomunalContext context, IMapper mapper)
+        public ServiceProvidersDTOController(KomunalContext context, IMapper mapper, IServiceProvidersService service)
         {
             _context = context;
             _mapper = mapper;
+            _service = service;
         }
 
         // GET: api/ServiceProvidersDTO
         [HttpGet]
+        //
+        //  здесь непонятно, как получить ActionResult ? без него работает
+        //
         public async Task<ActionResult<IEnumerable<ServiceProviderDTO>>> GetServiceProvidersDTO()
         {
             var ServiceProviders = await _context.ServiceProvider.ToListAsync();
@@ -38,40 +44,35 @@ namespace Komunalka.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceProviderDTO>> GetServiceProviderDTO(int id)
         {
-            var ServiceProvider = await _context.ServiceProvider.FindAsync(id);
 
-            if (ServiceProvider == null)
+            var serviceProviderDTO = await Task.Run(() => _service.GetServiceProviderDTO(id));
+            if (serviceProviderDTO == null)
             {
                 return NotFound();
             }
-
-            var ServiceProviderDTO = _mapper.Map<ServiceProviderDTO>(ServiceProvider);
-
-            return ServiceProviderDTO;
+            return serviceProviderDTO;
         }
 
         // PUT: api/PayingsByCounters/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutServiceProviderDTO(int id, ServiceProviderDTO ServiceProviderDTO)
+        public async Task<IActionResult> PutServiceProviderDTO(int id, ServiceProviderDTO serviceProviderDTO)
         {
-            var ServiceProvider = _mapper.Map<ServiceProvider>(ServiceProviderDTO);
-            if (id != ServiceProvider.Id)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(ServiceProvider).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Task.Run(() => _service.PutServiceProviderDTO(id, serviceProviderDTO));
                 return Ok();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ServiceProviderExists(id))
+                if (id != serviceProviderDTO.Id)
+                {
+                    return BadRequest();
+                }
+                if (!_service.ServiceProviderExists(id))
                 {
                     return NotFound();
                 }
@@ -88,17 +89,16 @@ namespace Komunalka.API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<ServiceProviderDTO>> PostServiceProviderDTO(ServiceProviderDTO ServiceProviderDTO)
+        public async Task<ActionResult<ServiceProviderDTO>> PostServiceProviderDTO(ServiceProviderDTO serviceProviderDTO)
         {
-            var ServiceProvider = _mapper.Map<ServiceProvider>(ServiceProviderDTO);
-            _context.ServiceProvider.Add(ServiceProvider);
+     
             try
             {
-                await _context.SaveChangesAsync();
+                await Task.Run(() => _service.PostServiceProviderDTO(serviceProviderDTO));
             }
             catch (DbUpdateException)
             {
-                if (ServiceProviderExists(ServiceProvider.Id))
+                if (_service.ServiceProviderExists(serviceProviderDTO.Id))
                 {
                     return Conflict();
                 }
@@ -108,29 +108,25 @@ namespace Komunalka.API.Controllers
                 }
             }
 
-            return CreatedAtAction("GetServiceProviderDTO", new { id = ServiceProvider.Id }, ServiceProviderDTO);
+            return CreatedAtAction("GetServiceProviderDTO", new { id = serviceProviderDTO.Id }, serviceProviderDTO);
         }
 
         // DELETE: api/PayingsByCounters/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<ServiceProviderDTO>> DeleteServiceProviderDTO(int id)
         {
-            var ServiceProvider = await _context.ServiceProvider.FindAsync(id);
-            if (ServiceProvider == null)
+ 
+            var serviceProviderDTO = await Task.Run(() => _service.DeleteServiceProvider(id));
+            if (serviceProviderDTO == null)
             {
                 return NotFound();
             }
-
-            _context.ServiceProvider.Remove(ServiceProvider);
-            await _context.SaveChangesAsync();
-
-            var ServiceProviderDTO = _mapper.Map<ServiceProviderDTO>(ServiceProvider);
-            return ServiceProviderDTO;
+            return serviceProviderDTO;
         }
 
-        private bool ServiceProviderExists(int id)
-        {
-            return _context.ServiceProvider.Any(e => e.Id == id);
-        }
+        //private bool ServiceProviderExists(int id)
+        //{
+        //    return _context.ServiceProvider.Any(e => e.Id == id);
+        //}
     }
 }

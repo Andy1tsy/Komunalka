@@ -10,7 +10,7 @@ using Komunalka.DAL.Models;
 using AutoMapper;
 using Komunalka.BLL.DTO;
 using Komunalka.BLL.Services;
-using Komunalka.BLL.Absract;
+using Komunalka.BLL.Abstract;
 
 namespace Komunalka.API.Controllers
 {
@@ -22,19 +22,22 @@ namespace Komunalka.API.Controllers
         private IMapper _mapper;
         private IPaymentsService _service;
 
-        public PaymentsDTOController(KomunalContext context, IMapper mapper)
+        public PaymentsDTOController(KomunalContext context, IMapper mapper, IPaymentsService service)
         {
             _context = context;
             _mapper = mapper;
-            _service = new PaymentsService(_context, _mapper);
+            _service = service;
         }
 
         // GET: api/PaymentsDTO
         [HttpGet]
-        public async Task<IEnumerable<PaymentDTO>> GetPaymentsDTO(int customerId)
+        //
+        //  здесь непонятно, как получить ActionResult ? без него работает
+        //
+        public async Task<IAsyncEnumerable<PaymentDTO>> GetPaymentsDTO(int customerId)
         {
             var paymentsDTO = await Task.Run(() => _service.GetPaymentsDTO(customerId));
-            return paymentsDTO;
+            return  paymentsDTO;
         }
 
         // GET: api/PaymentsDTO/5

@@ -9,6 +9,7 @@ namespace Komunalka.BLL.DTO
         public int Id { get; set; }
         public int Year { get; set; }
         public int Month { get; set; }
+        public decimal TotalSumma { get; set; }
         public DateTime Timestamp { get; set; }
 
         public List<PayingComponentDTO> PayingComponentsDTO { get; set; }
