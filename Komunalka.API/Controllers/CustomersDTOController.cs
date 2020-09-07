@@ -36,6 +36,7 @@ namespace Komunalka.API.Controllers
 
             // GET: api/Customers
             [HttpGet]
+           [ProducesResponseType(typeof(IEnumerable<CustomerDTO>), 200)]
         //
         //  здесь непонятно, как получить ActionResult ? без него работает
         //

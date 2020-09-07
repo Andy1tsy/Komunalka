@@ -29,13 +29,13 @@ namespace Komunalka.MVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSwaggerGen();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddDbContext<KomunalContext>(options => options.UseSqlServer(connection));
             services.AddScoped<ICustomersService, CustomersService>();
             services.AddScoped<IPaymentsService, PaymentsService>();
-            services.AddSwaggerGen();
             services.AddAutoMapper(c => c.AddProfile<BLL.Mapping.MappingProfile>(), typeof(Startup));
         }
 
@@ -52,13 +52,17 @@ namespace Komunalka.MVC
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
 
-            app.UseSwaggerUI(c =>
+           app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Komunalka MVC V1");
             });
+
+            app.UseHttpsRedirection();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
+ 
 
             app.UseRouting();
 
