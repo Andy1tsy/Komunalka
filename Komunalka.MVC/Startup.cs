@@ -72,7 +72,7 @@ namespace Komunalka.MVC
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=CustomersMVC}/{action=Index}/{id?}");
             });
         }
     }
